@@ -1,0 +1,1 @@
+module.exports.SEED = '@_esto/es-un@seed*dificil';
