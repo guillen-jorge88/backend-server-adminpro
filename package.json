@@ -1,19 +1,22 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
-  "description": "advanced angular course backend server",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Jorge Guillen <guillen.jorge88>",
-  "license": "MIT",
-  "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "body-parser": "^1.18.3",
-    "express": "^4.16.4",
-    "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.5.0",
-    "mongoose-unique-validator": "^2.0.2"
-  }
+    "name": "backend",
+    "version": "1.0.0",
+    "description": "advanced angular course backend server",
+    "main": "index.js",
+    "scripts": {
+        "start": "nodemon app.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Jorge Guillen <guillen.jorge88>",
+    "license": "MIT",
+    "dependencies": {
+        "bcryptjs": "^2.4.3",
+        "body-parser": "^1.18.3",
+        "express": "^4.16.4",
+        "express-fileupload": "^1.1.4",
+        "jsonwebtoken": "^8.5.1",
+        "mongoose": "^5.5.0",
+        "mongoose-unique-validator": "^2.0.2",
+        "serve-index": "^1.9.1"
+    }
 }

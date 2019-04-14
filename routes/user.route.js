@@ -16,28 +16,31 @@ var salt = bcrypt.genSaltSync(10);
  */
 
 app.get('/', (req, res, next) => {
+    var listFrom = req.query.listFrom || 0;
+    listFrom = Number(listFrom);
     User.find({}, ' firstname lastname email avatar_img role')
+        .skip(listFrom)
+        .limit(5)
         .exec(
             (err, users) => {
                 var message = {};
                 if (err) {
-                    message = {
+                    return res.status(201).json({
                         ok: false,
                         message: 'ERROR: find load users',
                         erros: err
-                    };
-                    return messageApi(res, message, 500, 'get:', '/user');
+                    });
                 }
-                message = {
-                    ok: true,
-                    users
-                };
-                messageApi(res, message, 201, 'post:', '/user');
+                User.count({}, (err, length) => {
+                    res.status(201).json({
+                        ok: true,
+                        users,
+                        length
+                    });
+                });
             }
         );
 });
-
-
 
 
 
@@ -52,22 +55,18 @@ app.put('/:id', mdAuth.verifyToken, (req, res, next) => {
     User.findById(id, ' firstname lastname email avatar_img role')
         .exec((err, userFind) => {
             if (err) {
-                message = {
+                return res.status(500).json({
                     ok: false,
                     message: 'ERROR: User not found',
                     erros: err
-                };
-
-                return messageApi(res, message, 500, 'post:', '/user');
+                });
             }
             if (!userFind) {
-                message = {
+                return res.status(500).json({
                     ok: false,
                     message: 'User with the id' + id + ' does not exist',
                     erros: { message: 'there is no user with that id' }
-                };
-
-                return messageApi(res, message, 500, 'post:', '/user');
+                });
             }
 
             userFind.firstname = body.firstname;
@@ -77,19 +76,16 @@ app.put('/:id', mdAuth.verifyToken, (req, res, next) => {
             userFind.save(
                 (err, savedUser) => {
                     if (err) {
-                        message = {
+                        return res.status(400).json({
                             ok: false,
                             message: 'ERROR: could not update user',
                             erros: err
-                        };
-
-                        return messageApi(res, message, 400, 'post:', '/user');
+                        });
                     }
-                    message = {
+                    res.status(400).json({
                         ok: true,
                         user: savedUser
-                    };
-                    messageApi(res, message, 200, 'post:', '/user');
+                    });
                 });
         });
 });
@@ -112,23 +108,18 @@ app.post('/', mdAuth.verifyToken, (req, res) => {
 
     user.save(
         (err, savedUser) => {
-            var message = {};
             if (err) {
-                message = {
+                return res.status(400).json({
                     ok: false,
                     message: 'ERROR: user could not be created',
                     erros: err
-                };
-
-                return messageApi(res, message, 400, 'post:', '/user');
+                });
             }
-
-            message = {
+            res.status(201).json({
                 ok: true,
                 user: savedUser,
                 user_token: req.user
-            };
-            messageApi(res, message, 201, 'post:', '/user');
+            });
         });
 });
 
@@ -143,34 +134,24 @@ app.delete('/:id', mdAuth.verifyToken, (req, res) => {
 
     User.findByIdAndDelete(id, (err, deletedUser) => {
         if (err) {
-            message = {
+            return res.status(500).json({
                 ok: false,
                 message: 'ERROR: could not update user',
                 erros: err
-            };
-
-            return messageApi(res, message, 500, 'post:', '/user');
+            });
         }
         if (!deletedUser) {
-            message = {
+            return res.status(400).json({
                 ok: false,
                 message: 'User with the id' + id + ' does not exist',
                 erros: { message: 'there is no user with that id' }
-            };
-
-            return messageApi(res, message, 400, 'post:', '/user');
+            });
         }
-        message = {
+        res.status(200).json({
             ok: true,
             user: deletedUser
-        };
-        messageApi(res, message, 200, 'post:', '/user');
+        });
     });
 });
-
-function messageApi(res, message, status, crudType, path) {
-    console.log('\x1b[47m\x1b[30m%s %s status\x1b[0m \x1b[32m%s\x1b[0m', crudType, path, status);
-    return res.status(status).json(message);
-}
 
 module.exports = app;
