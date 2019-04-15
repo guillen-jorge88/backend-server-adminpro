@@ -17,7 +17,7 @@ app.put('/:collection/:id', (req, res, netx) => {
 
     if (!req.files) {
         return res.status(400).json({
-            ok: true,
+            ok: false,
             message: 'Did not select a file.',
             error: { message: 'a file is required to upload.' }
         });
@@ -32,7 +32,7 @@ app.put('/:collection/:id', (req, res, netx) => {
 
     if (validCollections.indexOf(collection) < 0) {
         return res.status(400).json({
-            ok: true,
+            ok: false,
             message: 'Colletion is not valid.',
             error: { message: 'The valid colections are: ' + validCollections.join(', ') + '.' }
         });
@@ -43,7 +43,7 @@ app.put('/:collection/:id', (req, res, netx) => {
 
     if (validExtensions.indexOf(fileExtension) < 0) {
         return res.status(400).json({
-            ok: true,
+            ok: false,
             message: 'Extecion is not valid.',
             error: { message: 'The valid extensions are: ' + validExtensions.join(', ') + '.' }
         });
@@ -58,7 +58,7 @@ app.put('/:collection/:id', (req, res, netx) => {
     file.mv(imagePath, err => {
         if (err) {
             return res.status(500).json({
-                ok: true,
+                ok: false,
                 message: 'Error moving file.',
                 error: err
             });

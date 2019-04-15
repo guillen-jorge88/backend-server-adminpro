@@ -83,7 +83,7 @@ app.put('/:id', mdAuth.verifyToken, (req, res, next) => {
                         });
                     }
                     res.status(400).json({
-                        ok: true,
+                        ok: false,
                         user: savedUser
                     });
                 });
